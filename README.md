@@ -1,2 +1,2 @@
 # core-dump
-A core dump equivalent for PHP
+This project is under construction. Please check by later.
