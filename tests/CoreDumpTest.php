@@ -19,7 +19,22 @@ class CoreDumpTest extends TestCase
     {
         $coreDump = new CoreDump();
 
+        self::assertNotContains("------------------------------------------------------------\n Exception\n------------------------------------------------------------\n", $coreDump->__toString());
         self::assertContains("------------------------------------------------------------\n \$_SERVER global\n------------------------------------------------------------\n", $coreDump->__toString());
+        self::assertNotContains('[_SERVER_TEST_VAR] => 1', $coreDump->__toString());
+    }
+
+    /**
+     * Tests a core dump with exception.
+     */
+    public function testCoreDumpWithException()
+    {
+        $exception = new \InvalidArgumentException('This is an exception', 42);
+        $coreDump = new CoreDump($exception);
+
+        self::assertContains("------------------------------------------------------------\n Exception\n------------------------------------------------------------\n", $coreDump->__toString());
+        self::assertContains('Class    : InvalidArgumentException', $coreDump->__toString());
+        self::assertContains('Location : ' . __FILE__, $coreDump->__toString());
         self::assertNotContains('[_SERVER_TEST_VAR] => 1', $coreDump->__toString());
     }
 

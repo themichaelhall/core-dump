@@ -19,10 +19,16 @@ class CoreDump
      * Constructs a core dump object.
      *
      * @since 1.0.0
+     *
+     * @param \Throwable |null $exception The exception or null if no exception.
      */
-    public function __construct()
+    public function __construct(\Throwable $exception = null)
     {
         $this->content = [];
+
+        if ($exception !== null) {
+            $this->add('Exception', $exception);
+        }
 
         if (isset($_SERVER)) {
             $this->add('$_SERVER global', $_SERVER);
@@ -79,12 +85,32 @@ class CoreDump
         foreach ($this->content as list($header, $content)) {
             $result[] = str_repeat('-', 60) . "\n $header\n" . str_repeat('-', 60) . "\n";
 
-            if (is_array($content)) {
-                $result[] = print_r($content, true);
+            if (is_a($content, '\Throwable', true)) {
+                $result[] = self::formatException($content) . "\n";
+            } else {
+                $result[] = print_r($content, true) . "\n";
             }
         }
 
         return implode("\n", $result);
+    }
+
+    /**
+     * Formats an exception.
+     *
+     * @param \Throwable $exception The exception.
+     *
+     * @return string The result.
+     */
+    private static function formatException(\Throwable $exception)
+    {
+        return
+            'Class    : ' . get_class($exception) . "\n" .
+            'Message  : ' . $exception->getMessage() . "\n" .
+            'Code     : ' . $exception->getCode() . "\n" .
+            'Location : ' . $exception->getFile() . '(' . $exception->getLine() . ")\n" .
+            "\n" .
+            $exception->getTraceAsString();
     }
 
     /**
