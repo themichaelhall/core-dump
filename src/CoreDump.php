@@ -76,7 +76,7 @@ class CoreDump
             }
         }
 
-        return join("\n", $result);
+        return implode("\n", $result);
     }
 
     /**
