@@ -47,15 +47,23 @@ class CoreDump
      *
      * @since 1.0.0
      *
-     * @return string The fill path to the file.
+     * @param string $path The path to save file to.
+     *
+     * @return string The full path to the file.
      */
-    public function save(): string
+    public function save(string $path = ''): string
     {
-        $fullPath = getcwd() . DIRECTORY_SEPARATOR . strtolower(sha1(mt_rand() . microtime())) . '.coredump';
+        if ($path === '') {
+            $path = getcwd() . DIRECTORY_SEPARATOR . '#.coredump';
+        } elseif (is_dir($path)) {
+            $path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . '#.coredump';
+        }
 
-        file_put_contents($fullPath, $this->__toString());
+        $path = str_replace('#', sha1(mt_rand() . microtime()), $path);
 
-        return $fullPath;
+        file_put_contents($path, $this->__toString());
+
+        return $path;
     }
 
     /**

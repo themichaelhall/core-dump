@@ -52,6 +52,51 @@ class CoreDumpTest extends TestCase
     }
 
     /**
+     * Test save method with directory path.
+     */
+    public function testSaveWithDirectoryPath()
+    {
+        $coreDump = new CoreDump();
+        $coreDump->add('Test', ['Method' => 'testSaveWithDirectoryPath']);
+        $filePath = $coreDump->save(sys_get_temp_dir());
+        $fileContent = file_get_contents($filePath);
+        unlink($filePath);
+
+        self::assertRegExp('!^' . sys_get_temp_dir() . DIRECTORY_SEPARATOR . '[a-z0-9]{40}\.coredump$!', $filePath);
+        self::assertContains('[Method] => testSaveWithDirectoryPath', $fileContent);
+    }
+
+    /**
+     * Test save method with file path.
+     */
+    public function testSaveWithFilePath()
+    {
+        $coreDump = new CoreDump();
+        $coreDump->add('Test', ['Method' => 'testSaveWithFilePath']);
+        $filePath = $coreDump->save(sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'core.dump');
+        $fileContent = file_get_contents($filePath);
+        unlink($filePath);
+
+        self::assertSame(sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'core.dump', $filePath);
+        self::assertContains('[Method] => testSaveWithFilePath', $fileContent);
+    }
+
+    /**
+     * Test save method with file path with replacement character.
+     */
+    public function testSaveWithFilePathWithReplacementCharacter()
+    {
+        $coreDump = new CoreDump();
+        $coreDump->add('Test', ['Method' => 'testSaveWithFilePathWithReplacementCharacter']);
+        $filePath = $coreDump->save(sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'core.#.dump');
+        $fileContent = file_get_contents($filePath);
+        unlink($filePath);
+
+        self::assertRegExp('!^' . sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'core\.[a-z0-9]{40}\.dump$!', $filePath);
+        self::assertContains('[Method] => testSaveWithFilePathWithReplacementCharacter', $fileContent);
+    }
+
+    /**
      * Set up.
      */
     public function setUp()
