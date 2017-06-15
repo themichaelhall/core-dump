@@ -37,6 +37,21 @@ class CoreDumpTest extends TestCase
     }
 
     /**
+     * Test save method with default path.
+     */
+    public function testSaveWithDefaultValue()
+    {
+        $coreDump = new CoreDump();
+        $coreDump->add('Test', ['Method' => 'testSaveWithDefaultValue']);
+        $filePath = $coreDump->save();
+        $fileContent = file_get_contents($filePath);
+        unlink($filePath);
+
+        self::assertRegExp('!^' . getcwd() . DIRECTORY_SEPARATOR . '[a-z0-9]{40}\.coredump$!', $filePath);
+        self::assertContains('[Method] => testSaveWithDefaultValue', $fileContent);
+    }
+
+    /**
      * Set up.
      */
     public function setUp()

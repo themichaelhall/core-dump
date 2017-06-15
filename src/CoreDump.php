@@ -43,6 +43,22 @@ class CoreDump
     }
 
     /**
+     * Saves content to a file.
+     *
+     * @since 1.0.0
+     *
+     * @return string The fill path to the file.
+     */
+    public function save(): string
+    {
+        $fullPath = getcwd() . DIRECTORY_SEPARATOR . strtolower(sha1(mt_rand() . microtime())) . '.coredump';
+
+        file_put_contents($fullPath, $this->__toString());
+
+        return $fullPath;
+    }
+
+    /**
      * Returns the core dump content as a string.
      *
      * @since 1.0.0
