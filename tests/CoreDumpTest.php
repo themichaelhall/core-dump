@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace MichaelHall\CoreDump\Tests;
+namespace MichaelHall\Debug\Tests;
 
-use MichaelHall\CoreDump\CoreDump;
+use MichaelHall\Debug\CoreDump;
 use PHPUnit\Framework\TestCase;
 
 /**

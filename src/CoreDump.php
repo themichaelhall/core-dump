@@ -1,12 +1,12 @@
 <?php
 /**
- * This file is a part of the core-dump package.
+ * This file is a part of the debug package.
  *
- * Read more at https://github.com/themichaelhall/core-dump
+ * Read more at https://github.com/themichaelhall/debug
  */
 declare(strict_types=1);
 
-namespace MichaelHall\CoreDump;
+namespace MichaelHall\Debug;
 
 /**
  * Class CoreDump.

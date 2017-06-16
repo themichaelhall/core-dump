@@ -1,10 +1,9 @@
 {
-  "name": "michaelhall/core-dump",
-  "description": "Dump a file containing useful information for debugging purposes",
+  "name": "michaelhall/debug",
+  "description": "Debugging tools for PHP",
   "license": "MIT",
   "keywords": [
-    "core",
-    "dump"
+    "debug"
   ],
   "authors": [
     {
@@ -20,12 +19,12 @@
   },
   "autoload": {
     "psr-4": {
-      "MichaelHall\\CoreDump\\": "src"
+      "MichaelHall\\Debug\\": "src"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "MichaelHall\\CoreDump\\Tests\\": "tests"
+      "MichaelHall\\Debug\\Tests\\": "tests"
     }
   }
 }
