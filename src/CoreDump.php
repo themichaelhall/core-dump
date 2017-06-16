@@ -33,6 +33,10 @@ class CoreDump
         if (isset($_SERVER)) {
             $this->add('$_SERVER global', $_SERVER);
         }
+
+        if (isset($_GET)) {
+            $this->add('$_GET global', $_GET);
+        }
     }
 
     /**

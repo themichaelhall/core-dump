@@ -44,11 +44,14 @@ class CoreDumpTest extends TestCase
     public function testWithGlobals()
     {
         $_SERVER['_SERVER_TEST_VAR'] = '1';
+        $_GET['_GET_TEST_VAR'] = '2';
 
         $coreDump = new CoreDump();
 
         self::assertContains("------------------------------------------------------------\n \$_SERVER global\n------------------------------------------------------------\n", $coreDump->__toString());
         self::assertContains('[_SERVER_TEST_VAR] => 1', $coreDump->__toString());
+        self::assertContains("------------------------------------------------------------\n \$_GET global\n------------------------------------------------------------\n", $coreDump->__toString());
+        self::assertContains('[_GET_TEST_VAR] => 2', $coreDump->__toString());
     }
 
     /**
@@ -119,6 +122,10 @@ class CoreDumpTest extends TestCase
         if (!isset($_SERVER)) {
             $_SERVER = [];
         }
+
+        if (!isset($_GET)) {
+            $_GET = [];
+        }
     }
 
     /**
@@ -128,6 +135,10 @@ class CoreDumpTest extends TestCase
     {
         if (isset($_SERVER['_SERVER_TEST_VAR'])) {
             unset($_SERVER['_SERVER_TEST_VAR']);
+        }
+
+        if (isset($_GET['_GET_TEST_VAR'])) {
+            unset($_GET['_GET_TEST_VAR']);
         }
     }
 }
