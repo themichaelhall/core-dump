@@ -37,6 +37,10 @@ class CoreDump
         if (isset($_GET)) {
             $this->add('$_GET global', $_GET);
         }
+
+        if (isset($_POST)) {
+            $this->add('$_POST global', $_POST);
+        }
     }
 
     /**

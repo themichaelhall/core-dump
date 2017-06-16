@@ -35,7 +35,7 @@ class CoreDumpTest extends TestCase
         self::assertContains("------------------------------------------------------------\n Exception\n------------------------------------------------------------\n", $coreDump->__toString());
         self::assertContains('Class    : InvalidArgumentException', $coreDump->__toString());
         self::assertContains('Location : ' . __FILE__, $coreDump->__toString());
-        self::assertNotContains('[_SERVER_TEST_VAR] => 1', $coreDump->__toString());
+        self::assertNotContains('[_SERVER_TEST_VAR]', $coreDump->__toString());
     }
 
     /**
@@ -45,6 +45,7 @@ class CoreDumpTest extends TestCase
     {
         $_SERVER['_SERVER_TEST_VAR'] = '1';
         $_GET['_GET_TEST_VAR'] = '2';
+        $_POST['_POST_TEST_VAR'] = '3';
 
         $coreDump = new CoreDump();
 
@@ -52,6 +53,8 @@ class CoreDumpTest extends TestCase
         self::assertContains('[_SERVER_TEST_VAR] => 1', $coreDump->__toString());
         self::assertContains("------------------------------------------------------------\n \$_GET global\n------------------------------------------------------------\n", $coreDump->__toString());
         self::assertContains('[_GET_TEST_VAR] => 2', $coreDump->__toString());
+        self::assertContains("------------------------------------------------------------\n \$_POST global\n------------------------------------------------------------\n", $coreDump->__toString());
+        self::assertContains('[_POST_TEST_VAR] => 3', $coreDump->__toString());
     }
 
     /**
@@ -126,6 +129,10 @@ class CoreDumpTest extends TestCase
         if (!isset($_GET)) {
             $_GET = [];
         }
+
+        if (!isset($_POST)) {
+            $_POST = [];
+        }
     }
 
     /**
@@ -139,6 +146,10 @@ class CoreDumpTest extends TestCase
 
         if (isset($_GET['_GET_TEST_VAR'])) {
             unset($_GET['_GET_TEST_VAR']);
+        }
+
+        if (isset($_POST['_POST_TEST_VAR'])) {
+            unset($_POST['_POST_TEST_VAR']);
         }
     }
 }
