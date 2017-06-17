@@ -49,6 +49,10 @@ class CoreDump
         if (isset($_COOKIE)) {
             $this->add('$_COOKIE global', $_COOKIE);
         }
+
+        if (isset($_SESSION)) {
+            $this->add('$_SESSION global', $_SESSION);
+        }
     }
 
     /**
