@@ -116,7 +116,7 @@ class CoreDump
             if (is_a($content, '\Throwable', true)) {
                 $result[] = self::formatException($content) . "\n";
             } else {
-                $result[] = print_r($content, true) . "\n";
+                $result[] = VarDump::toString($content) . "\n";
             }
         }
 

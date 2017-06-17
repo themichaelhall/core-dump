@@ -21,7 +21,7 @@ class CoreDumpTest extends TestCase
 
         self::assertNotContains("------------------------------------------------------------\n Exception\n------------------------------------------------------------\n", $coreDump->__toString());
         self::assertContains("------------------------------------------------------------\n \$_SERVER global\n------------------------------------------------------------\n", $coreDump->__toString());
-        self::assertNotContains('[_SERVER_TEST_VAR] => 1', $coreDump->__toString());
+        self::assertNotContains('_SERVER_TEST_VAR', $coreDump->__toString());
     }
 
     /**
@@ -35,7 +35,7 @@ class CoreDumpTest extends TestCase
         self::assertContains("------------------------------------------------------------\n Exception\n------------------------------------------------------------\n", $coreDump->__toString());
         self::assertContains('Class    : InvalidArgumentException', $coreDump->__toString());
         self::assertContains('Location : ' . __FILE__, $coreDump->__toString());
-        self::assertNotContains('[_SERVER_TEST_VAR]', $coreDump->__toString());
+        self::assertNotContains('_SERVER_TEST_VAR', $coreDump->__toString());
     }
 
     /**
@@ -43,33 +43,33 @@ class CoreDumpTest extends TestCase
      */
     public function testWithGlobals()
     {
-        $_SERVER['_SERVER_TEST_VAR'] = '1';
-        $_GET['_GET_TEST_VAR'] = '2';
-        $_POST['_POST_TEST_VAR'] = '3';
-        $_FILES['_FILES_TEST_VAR'] = '4';
-        $_COOKIE['_COOKIE_TEST_VAR'] = '5';
-        $_SESSION['_SESSION_TEST_VAR'] = '6';
-        $_REQUEST['_REQUEST_TEST_VAR'] = '7';
-        $_ENV['_ENV_TEST_VAR'] = '8';
+        $_SERVER['_SERVER_TEST_VAR'] = 1;
+        $_GET['_GET_TEST_VAR'] = 2;
+        $_POST['_POST_TEST_VAR'] = 3;
+        $_FILES['_FILES_TEST_VAR'] = 4;
+        $_COOKIE['_COOKIE_TEST_VAR'] = 5;
+        $_SESSION['_SESSION_TEST_VAR'] = 6;
+        $_REQUEST['_REQUEST_TEST_VAR'] = 7;
+        $_ENV['_ENV_TEST_VAR'] = 8;
 
         $coreDump = new CoreDump();
 
         self::assertContains("------------------------------------------------------------\n \$_SERVER global\n------------------------------------------------------------\n", $coreDump->__toString());
-        self::assertContains('[_SERVER_TEST_VAR] => 1', $coreDump->__toString());
+        self::assertContains('"_SERVER_TEST_VAR" string[16] => 1 int', $coreDump->__toString());
         self::assertContains("------------------------------------------------------------\n \$_GET global\n------------------------------------------------------------\n", $coreDump->__toString());
-        self::assertContains('[_GET_TEST_VAR] => 2', $coreDump->__toString());
+        self::assertContains('"_GET_TEST_VAR" string[13] => 2 int', $coreDump->__toString());
         self::assertContains("------------------------------------------------------------\n \$_POST global\n------------------------------------------------------------\n", $coreDump->__toString());
-        self::assertContains('[_POST_TEST_VAR] => 3', $coreDump->__toString());
+        self::assertContains('"_POST_TEST_VAR" string[14] => 3 int', $coreDump->__toString());
         self::assertContains("------------------------------------------------------------\n \$_FILES global\n------------------------------------------------------------\n", $coreDump->__toString());
-        self::assertContains('[_FILES_TEST_VAR] => 4', $coreDump->__toString());
+        self::assertContains('"_FILES_TEST_VAR" string[15] => 4 int', $coreDump->__toString());
         self::assertContains("------------------------------------------------------------\n \$_COOKIE global\n------------------------------------------------------------\n", $coreDump->__toString());
-        self::assertContains('[_COOKIE_TEST_VAR] => 5', $coreDump->__toString());
+        self::assertContains('"_COOKIE_TEST_VAR" string[16] => 5 int', $coreDump->__toString());
         self::assertContains("------------------------------------------------------------\n \$_SESSION global\n------------------------------------------------------------\n", $coreDump->__toString());
-        self::assertContains('[_SESSION_TEST_VAR] => 6', $coreDump->__toString());
+        self::assertContains('"_SESSION_TEST_VAR" string[17] => 6 int', $coreDump->__toString());
         self::assertContains("------------------------------------------------------------\n \$_REQUEST global\n------------------------------------------------------------\n", $coreDump->__toString());
-        self::assertContains('[_REQUEST_TEST_VAR] => 7', $coreDump->__toString());
+        self::assertContains('"_REQUEST_TEST_VAR" string[17] => 7 int', $coreDump->__toString());
         self::assertContains("------------------------------------------------------------\n \$_ENV global\n------------------------------------------------------------\n", $coreDump->__toString());
-        self::assertContains('[_ENV_TEST_VAR] => 8', $coreDump->__toString());
+        self::assertContains('"_ENV_TEST_VAR" string[13] => 8 int', $coreDump->__toString());
     }
 
     /**
@@ -84,7 +84,7 @@ class CoreDumpTest extends TestCase
         unlink($filePath);
 
         self::assertRegExp('!^' . getcwd() . DIRECTORY_SEPARATOR . '[a-z0-9]{40}\.coredump$!', $filePath);
-        self::assertContains('[Method] => testSaveWithDefaultValue', $fileContent);
+        self::assertContains('"Method" string[6] => "testSaveWithDefaultValue" string[24]', $fileContent);
     }
 
     /**
@@ -99,7 +99,7 @@ class CoreDumpTest extends TestCase
         unlink($filePath);
 
         self::assertRegExp('!^' . sys_get_temp_dir() . DIRECTORY_SEPARATOR . '[a-z0-9]{40}\.coredump$!', $filePath);
-        self::assertContains('[Method] => testSaveWithDirectoryPath', $fileContent);
+        self::assertContains('"Method" string[6] => "testSaveWithDirectoryPath" string[25]', $fileContent);
     }
 
     /**
@@ -114,7 +114,7 @@ class CoreDumpTest extends TestCase
         unlink($filePath);
 
         self::assertSame(sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'core.dump', $filePath);
-        self::assertContains('[Method] => testSaveWithFilePath', $fileContent);
+        self::assertContains('"Method" string[6] => "testSaveWithFilePath" string[20]', $fileContent);
     }
 
     /**
@@ -129,7 +129,7 @@ class CoreDumpTest extends TestCase
         unlink($filePath);
 
         self::assertRegExp('!^' . sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'core\.[a-z0-9]{40}\.dump$!', $filePath);
-        self::assertContains('[Method] => testSaveWithFilePathWithReplacementCharacter', $fileContent);
+        self::assertContains('"Method" string[6] => "testSaveWithFilePathWithReplacementCharacter" string[44]', $fileContent);
     }
 
     /**
