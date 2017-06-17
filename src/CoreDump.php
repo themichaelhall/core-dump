@@ -57,6 +57,10 @@ class CoreDump
         if (isset($_REQUEST)) {
             $this->add('$_REQUEST global', $_REQUEST);
         }
+
+        if (isset($_ENV)) {
+            $this->add('$_ENV global', $_ENV);
+        }
     }
 
     /**

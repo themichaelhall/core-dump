@@ -50,6 +50,7 @@ class CoreDumpTest extends TestCase
         $_COOKIE['_COOKIE_TEST_VAR'] = '5';
         $_SESSION['_SESSION_TEST_VAR'] = '6';
         $_REQUEST['_REQUEST_TEST_VAR'] = '7';
+        $_ENV['_ENV_TEST_VAR'] = '8';
 
         $coreDump = new CoreDump();
 
@@ -67,6 +68,8 @@ class CoreDumpTest extends TestCase
         self::assertContains('[_SESSION_TEST_VAR] => 6', $coreDump->__toString());
         self::assertContains("------------------------------------------------------------\n \$_REQUEST global\n------------------------------------------------------------\n", $coreDump->__toString());
         self::assertContains('[_REQUEST_TEST_VAR] => 7', $coreDump->__toString());
+        self::assertContains("------------------------------------------------------------\n \$_ENV global\n------------------------------------------------------------\n", $coreDump->__toString());
+        self::assertContains('[_ENV_TEST_VAR] => 8', $coreDump->__toString());
     }
 
     /**
@@ -161,6 +164,10 @@ class CoreDumpTest extends TestCase
         if (!isset($_REQUEST)) {
             $_REQUEST = [];
         }
+
+        if (!isset($_ENV)) {
+            $_ENV = [];
+        }
     }
 
     /**
@@ -194,6 +201,10 @@ class CoreDumpTest extends TestCase
 
         if (isset($_REQUEST['_REQUEST_TEST_VAR'])) {
             unset($_REQUEST['_REQUEST_TEST_VAR']);
+        }
+
+        if (isset($_ENV['_ENV_TEST_VAR'])) {
+            unset($_ENV['_ENV_TEST_VAR']);
         }
     }
 }
