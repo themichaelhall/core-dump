@@ -47,6 +47,7 @@ class CoreDumpTest extends TestCase
         $_GET['_GET_TEST_VAR'] = '2';
         $_POST['_POST_TEST_VAR'] = '3';
         $_FILES['_FILES_TEST_VAR'] = '4';
+        $_COOKIE['_COOKIE_TEST_VAR'] = '5';
 
         $coreDump = new CoreDump();
 
@@ -58,6 +59,8 @@ class CoreDumpTest extends TestCase
         self::assertContains('[_POST_TEST_VAR] => 3', $coreDump->__toString());
         self::assertContains("------------------------------------------------------------\n \$_FILES global\n------------------------------------------------------------\n", $coreDump->__toString());
         self::assertContains('[_FILES_TEST_VAR] => 4', $coreDump->__toString());
+        self::assertContains("------------------------------------------------------------\n \$_COOKIE global\n------------------------------------------------------------\n", $coreDump->__toString());
+        self::assertContains('[_COOKIE_TEST_VAR] => 5', $coreDump->__toString());
     }
 
     /**
@@ -140,6 +143,10 @@ class CoreDumpTest extends TestCase
         if (!isset($_FILES)) {
             $_FILES = [];
         }
+
+        if (!isset($_COOKIE)) {
+            $_COOKIE = [];
+        }
     }
 
     /**
@@ -161,6 +168,10 @@ class CoreDumpTest extends TestCase
 
         if (isset($_FILES['_FILES_TEST_VAR'])) {
             unset($_FILES['_FILES_TEST_VAR']);
+        }
+
+        if (isset($_COOKIE['_COOKIE_TEST_VAR'])) {
+            unset($_COOKIE['_COOKIE_TEST_VAR']);
         }
     }
 }
