@@ -26,6 +26,20 @@ class VarDump
      */
     public static function toString($var): string
     {
+        if (is_array($var)) {
+            // fixme: multiple levels.
+            // fixme: infinite recursion.
+            $result = 'array[' . count($var) . "]\n[\n";
+
+            foreach ($var as $key => $value) {
+                $result .= '  ' . self::toString($key) . ' => ' . self::toString($value) . "\n";
+            }
+
+            $result .= ']';
+
+            return $result;
+        }
+
         if (is_string($var)) {
             return '"' . $var . '" string[' . mb_strlen($var) . ']';
         }

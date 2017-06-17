@@ -137,4 +137,25 @@ class VarDumpTest extends TestCase
 
         self::assertSame('"Baz" string[3]', $value);
     }
+
+    /**
+     * Test toString method for a simple array.
+     */
+    public function testSimpleArrayToString()
+    {
+        self::assertSame("array[2]\n[\n  10 int => \"Foo\" string[3]\n  \"Bar\" string[3] => \"Baz\" string[3]\n]", VarDump::toString([10 => 'Foo', 'Bar' => 'Baz']));
+    }
+
+    /**
+     * Test write method for a simple array.
+     */
+    public function testWriteSimpleArray()
+    {
+        ob_start();
+        VarDump::write([10 => 'Foo', 'Bar' => 'Baz']);
+        $value = ob_get_contents();
+        ob_end_clean();
+
+        self::assertSame("array[2]\n[\n  10 int => \"Foo\" string[3]\n  \"Bar\" string[3] => \"Baz\" string[3]\n]", $value);
+    }
 }
