@@ -26,6 +26,10 @@ class VarDump
      */
     public static function toString($var): string
     {
+        if (is_float($var)) {
+            return $var . ' (float)';
+        }
+
         if (is_int($var)) {
             return $var . ' (int)';
         }

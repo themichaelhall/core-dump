@@ -95,4 +95,25 @@ class VarDumpTest extends TestCase
 
         self::assertSame('-5678 (int)', $value);
     }
+
+    /**
+     * Test toString method for float.
+     */
+    public function testFloatToString()
+    {
+        self::assertSame('3.25 (float)', VarDump::toString(3.25));
+    }
+
+    /**
+     * Test write method for float.
+     */
+    public function testWriteFloat()
+    {
+        ob_start();
+        VarDump::write(-1.5);
+        $value = ob_get_contents();
+        ob_end_clean();
+
+        self::assertSame('-1.5 (float)', $value);
+    }
 }
