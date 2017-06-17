@@ -17,7 +17,7 @@ class VarDumpTest extends TestCase
      */
     public function testNullToString()
     {
-        self::assertSame('(null)', VarDump::toString(null));
+        self::assertSame('null', VarDump::toString(null));
     }
 
     /**
@@ -30,7 +30,7 @@ class VarDumpTest extends TestCase
         $value = ob_get_contents();
         ob_end_clean();
 
-        self::assertSame('(null)', $value);
+        self::assertSame('null', $value);
     }
 
     /**
@@ -38,7 +38,7 @@ class VarDumpTest extends TestCase
      */
     public function testTrueToString()
     {
-        self::assertSame('true (bool)', VarDump::toString(true));
+        self::assertSame('true bool', VarDump::toString(true));
     }
 
     /**
@@ -51,7 +51,7 @@ class VarDumpTest extends TestCase
         $value = ob_get_contents();
         ob_end_clean();
 
-        self::assertSame('true (bool)', $value);
+        self::assertSame('true bool', $value);
     }
 
     /**
@@ -59,7 +59,7 @@ class VarDumpTest extends TestCase
      */
     public function testFalseToString()
     {
-        self::assertSame('false (bool)', VarDump::toString(false));
+        self::assertSame('false bool', VarDump::toString(false));
     }
 
     /**
@@ -72,7 +72,7 @@ class VarDumpTest extends TestCase
         $value = ob_get_contents();
         ob_end_clean();
 
-        self::assertSame('false (bool)', $value);
+        self::assertSame('false bool', $value);
     }
 
     /**
@@ -80,7 +80,7 @@ class VarDumpTest extends TestCase
      */
     public function testIntToString()
     {
-        self::assertSame('1234 (int)', VarDump::toString(1234));
+        self::assertSame('1234 int', VarDump::toString(1234));
     }
 
     /**
@@ -93,7 +93,7 @@ class VarDumpTest extends TestCase
         $value = ob_get_contents();
         ob_end_clean();
 
-        self::assertSame('-5678 (int)', $value);
+        self::assertSame('-5678 int', $value);
     }
 
     /**
@@ -101,7 +101,7 @@ class VarDumpTest extends TestCase
      */
     public function testFloatToString()
     {
-        self::assertSame('3.25 (float)', VarDump::toString(3.25));
+        self::assertSame('3.25 float', VarDump::toString(3.25));
     }
 
     /**
@@ -114,7 +114,7 @@ class VarDumpTest extends TestCase
         $value = ob_get_contents();
         ob_end_clean();
 
-        self::assertSame('-1.5 (float)', $value);
+        self::assertSame('-1.5 float', $value);
     }
 
     /**
@@ -122,7 +122,7 @@ class VarDumpTest extends TestCase
      */
     public function testStringToString()
     {
-        self::assertSame('"Foo Bar È" (string[9])', VarDump::toString('Foo Bar È'));
+        self::assertSame('"Foo Bar È" string[9]', VarDump::toString('Foo Bar È'));
     }
 
     /**
@@ -135,6 +135,6 @@ class VarDumpTest extends TestCase
         $value = ob_get_contents();
         ob_end_clean();
 
-        self::assertSame('"Baz" (string[3])', $value);
+        self::assertSame('"Baz" string[3]', $value);
     }
 }

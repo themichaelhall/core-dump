@@ -27,22 +27,22 @@ class VarDump
     public static function toString($var): string
     {
         if (is_string($var)) {
-            return '"' . $var . '" (string[' . mb_strlen($var) . '])';
+            return '"' . $var . '" string[' . mb_strlen($var) . ']';
         }
 
         if (is_float($var)) {
-            return $var . ' (float)';
+            return $var . ' float';
         }
 
         if (is_int($var)) {
-            return $var . ' (int)';
+            return $var . ' int';
         }
 
         if (is_bool($var)) {
-            return ($var ? 'true' : 'false') . ' (bool)';
+            return ($var ? 'true' : 'false') . ' bool';
         }
 
-        return '(null)';
+        return 'null';
     }
 
     /**
