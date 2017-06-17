@@ -74,4 +74,25 @@ class VarDumpTest extends TestCase
 
         self::assertSame('false (bool)', $value);
     }
+
+    /**
+     * Test toString method for int.
+     */
+    public function testIntToString()
+    {
+        self::assertSame('1234 (int)', VarDump::toString(1234));
+    }
+
+    /**
+     * Test write method for int.
+     */
+    public function testWriteInt()
+    {
+        ob_start();
+        VarDump::write(-5678);
+        $value = ob_get_contents();
+        ob_end_clean();
+
+        self::assertSame('-5678 (int)', $value);
+    }
 }

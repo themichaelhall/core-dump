@@ -26,6 +26,10 @@ class VarDump
      */
     public static function toString($var): string
     {
+        if (is_int($var)) {
+            return $var . ' (int)';
+        }
+
         if (is_bool($var)) {
             return ($var ? 'true' : 'false') . ' (bool)';
         }
