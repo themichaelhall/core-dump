@@ -46,6 +46,7 @@ class CoreDumpTest extends TestCase
         $_SERVER['_SERVER_TEST_VAR'] = '1';
         $_GET['_GET_TEST_VAR'] = '2';
         $_POST['_POST_TEST_VAR'] = '3';
+        $_FILES['_FILES_TEST_VAR'] = '4';
 
         $coreDump = new CoreDump();
 
@@ -55,6 +56,8 @@ class CoreDumpTest extends TestCase
         self::assertContains('[_GET_TEST_VAR] => 2', $coreDump->__toString());
         self::assertContains("------------------------------------------------------------\n \$_POST global\n------------------------------------------------------------\n", $coreDump->__toString());
         self::assertContains('[_POST_TEST_VAR] => 3', $coreDump->__toString());
+        self::assertContains("------------------------------------------------------------\n \$_FILES global\n------------------------------------------------------------\n", $coreDump->__toString());
+        self::assertContains('[_FILES_TEST_VAR] => 4', $coreDump->__toString());
     }
 
     /**
@@ -133,6 +136,10 @@ class CoreDumpTest extends TestCase
         if (!isset($_POST)) {
             $_POST = [];
         }
+
+        if (!isset($_FILES)) {
+            $_FILES = [];
+        }
     }
 
     /**
@@ -150,6 +157,10 @@ class CoreDumpTest extends TestCase
 
         if (isset($_POST['_POST_TEST_VAR'])) {
             unset($_POST['_POST_TEST_VAR']);
+        }
+
+        if (isset($_FILES['_FILES_TEST_VAR'])) {
+            unset($_FILES['_FILES_TEST_VAR']);
         }
     }
 }

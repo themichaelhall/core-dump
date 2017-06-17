@@ -41,6 +41,10 @@ class CoreDump
         if (isset($_POST)) {
             $this->add('$_POST global', $_POST);
         }
+
+        if (isset($_FILES)) {
+            $this->add('$_FILES global', $_FILES);
+        }
     }
 
     /**
