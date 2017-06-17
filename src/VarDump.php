@@ -26,6 +26,10 @@ class VarDump
      */
     public static function toString($var): string
     {
+        if (is_string($var)) {
+            return '"' . $var . '" (string[' . mb_strlen($var) . '])';
+        }
+
         if (is_float($var)) {
             return $var . ' (float)';
         }

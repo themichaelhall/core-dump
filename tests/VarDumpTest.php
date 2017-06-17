@@ -116,4 +116,25 @@ class VarDumpTest extends TestCase
 
         self::assertSame('-1.5 (float)', $value);
     }
+
+    /**
+     * Test toString method for string.
+     */
+    public function testStringToString()
+    {
+        self::assertSame('"Foo Bar È" (string[9])', VarDump::toString('Foo Bar È'));
+    }
+
+    /**
+     * Test write method for string.
+     */
+    public function testWriteString()
+    {
+        ob_start();
+        VarDump::write('Baz');
+        $value = ob_get_contents();
+        ob_end_clean();
+
+        self::assertSame('"Baz" (string[3])', $value);
+    }
 }
