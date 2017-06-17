@@ -53,6 +53,10 @@ class CoreDump
         if (isset($_SESSION)) {
             $this->add('$_SESSION global', $_SESSION);
         }
+
+        if (isset($_REQUEST)) {
+            $this->add('$_REQUEST global', $_REQUEST);
+        }
     }
 
     /**
