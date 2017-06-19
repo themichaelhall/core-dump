@@ -158,4 +158,25 @@ class VarDumpTest extends TestCase
 
         self::assertSame("array[2]\n[\n  10 int => \"Foo\" string[3]\n  \"Bar\" string[3] => \"Baz\" string[3]\n]", $value);
     }
+
+    /**
+     * Test toString method for a nested array.
+     */
+    public function testNestedArrayToString()
+    {
+        self::assertSame("array[2]\n[\n  10 int => \"Foo\" string[3]\n  \"Bar\" string[3] => array[2]\n  [\n    \"Baz\" string[3] => true bool\n    10 int => array[2]\n    [\n      0 int => 11 int\n      1 int => 12 int\n    ]\n  ]\n]", VarDump::toString([10 => 'Foo', 'Bar' => ['Baz' => true, 10 => [11, 12]]]));
+    }
+
+    /**
+     * Test write method for nested array.
+     */
+    public function testWriteNestedArray()
+    {
+        ob_start();
+        VarDump::write([10 => 'Foo', 'Bar' => ['Baz' => true, 10 => [11, 12]]]);
+        $value = ob_get_contents();
+        ob_end_clean();
+
+        self::assertSame("array[2]\n[\n  10 int => \"Foo\" string[3]\n  \"Bar\" string[3] => array[2]\n  [\n    \"Baz\" string[3] => true bool\n    10 int => array[2]\n    [\n      0 int => 11 int\n      1 int => 12 int\n    ]\n  ]\n]", $value);
+    }
 }

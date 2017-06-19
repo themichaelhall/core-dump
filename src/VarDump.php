@@ -26,16 +26,42 @@ class VarDump
      */
     public static function toString($var): string
     {
+        return self::toStringRecursive($var);
+    }
+
+    /**
+     * Writes a variable as a readable string.
+     *
+     * @since 1.0.0
+     *
+     * @param mixed $var The variable.
+     */
+    public static function write($var): void
+    {
+        echo self::toString($var);
+    }
+
+    /**
+     * Dumps a variable as a readable string.
+     *
+     * @param mixed $var    The variable.
+     * @param int   $indent The indent.
+     *
+     * @return string The variable as a readable string.
+     */
+    private static function toStringRecursive($var, int $indent = 0): string
+    {
+        $indentString = str_repeat('  ', $indent);
+
         if (is_array($var)) {
-            // fixme: multiple levels.
             // fixme: infinite recursion.
-            $result = 'array[' . count($var) . "]\n[\n";
+            $result = 'array[' . count($var) . "]\n" . $indentString . "[\n";
 
             foreach ($var as $key => $value) {
-                $result .= '  ' . self::toString($key) . ' => ' . self::toString($value) . "\n";
+                $result .= $indentString . '  ' . self::toString($key) . ' => ' . self::toStringRecursive($value, $indent + 1) . "\n";
             }
 
-            $result .= ']';
+            $result .= $indentString . ']';
 
             return $result;
         }
@@ -57,17 +83,5 @@ class VarDump
         }
 
         return 'null';
-    }
-
-    /**
-     * Writes a variable as a readable string.
-     *
-     * @since 1.0.0
-     *
-     * @param mixed $var The variable.
-     */
-    public static function write($var): void
-    {
-        echo self::toString($var);
     }
 }
