@@ -53,8 +53,22 @@ class VarDump
     {
         $indentString = str_repeat('  ', $indent);
 
+        // fixme: infinite recursion.
+        if (is_object($var)) {
+            $result = get_class($var) . "\n{\n";
+
+            $reflectionClass = new \ReflectionClass($var);
+            foreach ($reflectionClass->getProperties() as $property) {
+                $property->setAccessible(true);
+                $result .= '  ' . $property->getName() . ' => ' . self::toString($property->getValue($var)) . "\n";
+            }
+
+            $result .= '}';
+
+            return $result;
+        }
+
         if (is_array($var)) {
-            // fixme: infinite recursion.
             $result = 'array[' . count($var) . "]\n" . $indentString . "[\n";
 
             foreach ($var as $key => $value) {

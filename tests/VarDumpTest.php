@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MichaelHall\Debug\Tests;
 
+use MichaelHall\Debug\Tests\Helpers\SimpleTestClass;
 use MichaelHall\Debug\VarDump;
 use PHPUnit\Framework\TestCase;
 
@@ -178,5 +179,30 @@ class VarDumpTest extends TestCase
         ob_end_clean();
 
         self::assertSame("array[2]\n[\n  10 int => \"Foo\" string[3]\n  \"Bar\" string[3] => array[2]\n  [\n    \"Baz\" string[3] => true bool\n    10 int => array[2]\n    [\n      0 int => 11 int\n      1 int => 12 int\n    ]\n  ]\n]", $value);
+    }
+
+    /**
+     * Test toString method for a simple object.
+     */
+    public function testSimpleObjectToString()
+    {
+        $simpleTestClass = new SimpleTestClass(1234, true, 12.5);
+
+        self::assertSame("MichaelHall\Debug\Tests\Helpers\SimpleTestClass\n{\n  publicVar => 1234 int\n  protectedVar => true bool\n  privateVar => 12.5 float\n}", VarDump::toString($simpleTestClass));
+    }
+
+    /**
+     * Test write method for a simple object.
+     */
+    public function testWriteSimpleObject()
+    {
+        $simpleTestClass = new SimpleTestClass(1234, true, 12.5);
+
+        ob_start();
+        VarDump::write($simpleTestClass);
+        $value = ob_get_contents();
+        ob_end_clean();
+
+        self::assertSame("MichaelHall\Debug\Tests\Helpers\SimpleTestClass\n{\n  publicVar => 1234 int\n  protectedVar => true bool\n  privateVar => 12.5 float\n}", $value);
     }
 }
