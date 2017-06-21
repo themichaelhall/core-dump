@@ -26,7 +26,7 @@ class VarDump
      */
     public static function toString($var): string
     {
-        return self::toStringRecursive($var);
+        return self::toStringRecursive($var, 0);
     }
 
     /**
@@ -49,35 +49,14 @@ class VarDump
      *
      * @return string The variable as a readable string.
      */
-    private static function toStringRecursive($var, int $indent = 0): string
+    private static function toStringRecursive($var, int $indent): string
     {
-        $indentString = str_repeat('  ', $indent);
-
-        // fixme: infinite recursion.
         if (is_object($var)) {
-            $result = get_class($var) . "\n" . $indentString . "{\n";
-
-            $reflectionClass = new \ReflectionClass($var);
-            foreach ($reflectionClass->getProperties() as $property) {
-                $property->setAccessible(true);
-                $result .= $indentString . '  ' . $property->getName() . ' => ' . self::toStringRecursive($property->getValue($var), $indent + 1) . "\n";
-            }
-
-            $result .= $indentString . '}';
-
-            return $result;
+            return self::objectToString($var, $indent);
         }
 
         if (is_array($var)) {
-            $result = 'array[' . count($var) . "]\n" . $indentString . "[\n";
-
-            foreach ($var as $key => $value) {
-                $result .= $indentString . '  ' . self::toString($key) . ' => ' . self::toStringRecursive($value, $indent + 1) . "\n";
-            }
-
-            $result .= $indentString . ']';
-
-            return $result;
+            return self::arrayToString($var, $indent);
         }
 
         if (is_string($var)) {
@@ -97,5 +76,52 @@ class VarDump
         }
 
         return 'null';
+    }
+
+    /**
+     * Converts an object to a string.
+     *
+     * @param mixed $var    The object.
+     * @param int   $indent The indent.
+     *
+     * @return string The object as a string.
+     */
+    private static function objectToString($var, int $indent): string
+    {
+        // fixme: infinite recursion.
+        $indentString = str_repeat('  ', $indent);
+        $result = get_class($var) . "\n" . $indentString . "{\n";
+
+        $reflectionClass = new \ReflectionClass($var);
+        foreach ($reflectionClass->getProperties() as $property) {
+            $property->setAccessible(true);
+            $result .= $indentString . '  ' . $property->getName() . ' => ' . self::toStringRecursive($property->getValue($var), $indent + 1) . "\n";
+        }
+
+        $result .= $indentString . '}';
+
+        return $result;
+    }
+
+    /**
+     * Converts an array to a string.
+     *
+     * @param array $var    The array.
+     * @param int   $indent The indent.
+     *
+     * @return string The array as a string.
+     */
+    private static function arrayToString(array $var, int $indent): string
+    {
+        $indentString = str_repeat('  ', $indent);
+        $result = 'array[' . count($var) . "]\n" . $indentString . "[\n";
+
+        foreach ($var as $key => $value) {
+            $result .= $indentString . '  ' . self::toString($key) . ' => ' . self::toStringRecursive($value, $indent + 1) . "\n";
+        }
+
+        $result .= $indentString . ']';
+
+        return $result;
     }
 }
