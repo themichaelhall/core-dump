@@ -17,10 +17,12 @@ class CoreDumpTest extends TestCase
      */
     public function testEmptyCoreDump()
     {
+        unset($_SESSION);
         $coreDump = new CoreDump();
 
         self::assertNotContains("------------------------------------------------------------\n Exception\n------------------------------------------------------------\n", $coreDump->__toString());
         self::assertContains("------------------------------------------------------------\n \$_SERVER global\n------------------------------------------------------------\n", $coreDump->__toString());
+        self::assertNotContains("------------------------------------------------------------\n \$_SESSION global\n------------------------------------------------------------\n", $coreDump->__toString());
         self::assertNotContains('_SERVER_TEST_VAR', $coreDump->__toString());
     }
 

@@ -30,37 +30,14 @@ class CoreDump
             $this->add('Exception', $exception);
         }
 
-        if (isset($_SERVER)) {
-            $this->add('$_SERVER global', $_SERVER);
-        }
-
-        if (isset($_GET)) {
-            $this->add('$_GET global', $_GET);
-        }
-
-        if (isset($_POST)) {
-            $this->add('$_POST global', $_POST);
-        }
-
-        if (isset($_FILES)) {
-            $this->add('$_FILES global', $_FILES);
-        }
-
-        if (isset($_COOKIE)) {
-            $this->add('$_COOKIE global', $_COOKIE);
-        }
-
-        if (isset($_SESSION)) {
-            $this->add('$_SESSION global', $_SESSION);
-        }
-
-        if (isset($_REQUEST)) {
-            $this->add('$_REQUEST global', $_REQUEST);
-        }
-
-        if (isset($_ENV)) {
-            $this->add('$_ENV global', $_ENV);
-        }
+        $this->addGlobalArray('SERVER', $_SERVER ?? null);
+        $this->addGlobalArray('GET', $_GET ?? null);
+        $this->addGlobalArray('POST', $_POST ?? null);
+        $this->addGlobalArray('FILES', $_FILES ?? null);
+        $this->addGlobalArray('COOKIE', $_COOKIE ?? null);
+        $this->addGlobalArray('SESSION', $_SESSION ?? null);
+        $this->addGlobalArray('REQUEST', $_REQUEST ?? null);
+        $this->addGlobalArray('ENV', $_ENV ?? null);
     }
 
     /**
@@ -121,6 +98,21 @@ class CoreDump
         }
 
         return implode("\n", $result);
+    }
+
+    /**
+     * Adds a global array.
+     *
+     * @param string     $name        The name of the global variable.
+     * @param array|null $globalArray The global array or null if not set.
+     */
+    private function addGlobalArray(string $name, array $globalArray = null)
+    {
+        if ($globalArray === null) {
+            return;
+        }
+
+        $this->add('$_' . $name . ' global', $globalArray);
     }
 
     /**
