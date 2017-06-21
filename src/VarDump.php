@@ -55,15 +55,15 @@ class VarDump
 
         // fixme: infinite recursion.
         if (is_object($var)) {
-            $result = get_class($var) . "\n{\n";
+            $result = get_class($var) . "\n" . $indentString . "{\n";
 
             $reflectionClass = new \ReflectionClass($var);
             foreach ($reflectionClass->getProperties() as $property) {
                 $property->setAccessible(true);
-                $result .= '  ' . $property->getName() . ' => ' . self::toString($property->getValue($var)) . "\n";
+                $result .= $indentString . '  ' . $property->getName() . ' => ' . self::toStringRecursive($property->getValue($var), $indent + 1) . "\n";
             }
 
-            $result .= '}';
+            $result .= $indentString . '}';
 
             return $result;
         }

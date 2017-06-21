@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MichaelHall\Debug\Tests;
 
+use MichaelHall\Debug\Tests\Helpers\CombinedTestClass;
 use MichaelHall\Debug\Tests\Helpers\SimpleTestClass;
 use MichaelHall\Debug\VarDump;
 use PHPUnit\Framework\TestCase;
@@ -204,5 +205,38 @@ class VarDumpTest extends TestCase
         ob_end_clean();
 
         self::assertSame("MichaelHall\Debug\Tests\Helpers\SimpleTestClass\n{\n  publicVar => 1234 int\n  protectedVar => true bool\n  privateVar => 12.5 float\n}", $value);
+    }
+
+    /**
+     * Test toString method for a nested object.
+     */
+    public function testNestedObjectToString()
+    {
+        $combinedTestClass = new CombinedTestClass(
+            new SimpleTestClass(123, false, 10.0),
+            ['Foo' => 1, 'Bar' => 2, 'Baz' => [true, false]],
+            'xxx'
+        );
+
+        self::assertSame("MichaelHall\Debug\Tests\Helpers\CombinedTestClass\n{\n  simpleTestClass => MichaelHall\Debug\Tests\Helpers\SimpleTestClass\n  {\n    publicVar => 123 int\n    protectedVar => false bool\n    privateVar => 10 float\n  }\n  array => array[3]\n  [\n    \"Foo\" string[3] => 1 int\n    \"Bar\" string[3] => 2 int\n    \"Baz\" string[3] => array[2]\n    [\n      0 int => true bool\n      1 int => false bool\n    ]\n  ]\n  text => \"xxx\" string[3]\n}", VarDump::toString($combinedTestClass));
+    }
+
+    /**
+     * Test write method for nested object.
+     */
+    public function testWriteNestedObject()
+    {
+        $combinedTestClass = new CombinedTestClass(
+            new SimpleTestClass(123, false, 10.0),
+            ['Foo' => 1, 'Bar' => 2, 'Baz' => [true, false]],
+            'xxx'
+        );
+
+        ob_start();
+        VarDump::write($combinedTestClass);
+        $value = ob_get_contents();
+        ob_end_clean();
+
+        self::assertSame("MichaelHall\Debug\Tests\Helpers\CombinedTestClass\n{\n  simpleTestClass => MichaelHall\Debug\Tests\Helpers\SimpleTestClass\n  {\n    publicVar => 123 int\n    protectedVar => false bool\n    privateVar => 10 float\n  }\n  array => array[3]\n  [\n    \"Foo\" string[3] => 1 int\n    \"Bar\" string[3] => 2 int\n    \"Baz\" string[3] => array[2]\n    [\n      0 int => true bool\n      1 int => false bool\n    ]\n  ]\n  text => \"xxx\" string[3]\n}", $value);
     }
 }
