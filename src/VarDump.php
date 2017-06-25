@@ -93,7 +93,7 @@ class VarDump
         $result = get_class($var) . "\n" . $indentString . "{\n";
 
         $reflectionClass = new \ReflectionClass($var);
-        foreach ($reflectionClass->getProperties() as $property) {
+        foreach (self::getReflectionClassProperties($reflectionClass) as $property) {
             $property->setAccessible(true);
             $result .= $indentString . '  ' . $property->getName() . ' => ' . self::toStringRecursive($property->getValue($var), $indent + 1) . "\n";
         }
@@ -123,5 +123,29 @@ class VarDump
         $result .= $indentString . ']';
 
         return $result;
+    }
+
+    /**
+     * Returns the properties for a reflection class and its base classes.
+     *
+     * @param \ReflectionClass $reflectionClass The reflection class.
+     *
+     * @return \ReflectionProperty[] The reflection properties.
+     */
+    private static function getReflectionClassProperties(\ReflectionClass $reflectionClass): array
+    {
+        $properties = [];
+
+        do {
+            foreach ($reflectionClass->getProperties() as $property) {
+                if (!in_array($property, $properties)) {
+                    $properties[] = $property;
+                }
+            }
+
+            $reflectionClass = $reflectionClass->getParentClass();
+        } while ($reflectionClass !== false);
+
+        return $properties;
     }
 }

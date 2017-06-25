@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MichaelHall\Debug\Tests;
 
 use MichaelHall\Debug\Tests\Helpers\CombinedTestClass;
+use MichaelHall\Debug\Tests\Helpers\DerivedTestClass;
 use MichaelHall\Debug\Tests\Helpers\SimpleTestClass;
 use MichaelHall\Debug\VarDump;
 use PHPUnit\Framework\TestCase;
@@ -238,5 +239,30 @@ class VarDumpTest extends TestCase
         ob_end_clean();
 
         self::assertSame("MichaelHall\Debug\Tests\Helpers\CombinedTestClass\n{\n  simpleTestClass => MichaelHall\Debug\Tests\Helpers\SimpleTestClass\n  {\n    publicVar => 123 int\n    protectedVar => false bool\n    privateVar => 10 float\n  }\n  array => array[3]\n  [\n    \"Foo\" string[3] => 1 int\n    \"Bar\" string[3] => 2 int\n    \"Baz\" string[3] => array[2]\n    [\n      0 int => true bool\n      1 int => false bool\n    ]\n  ]\n  text => \"xxx\" string[3]\n}", $value);
+    }
+
+    /**
+     * Test toString method for a derived object.
+     */
+    public function testDerivedObjectToString()
+    {
+        $derivedTestClass = new DerivedTestClass(10, false, 20.0, 'FooBar');
+
+        self::assertSame("MichaelHall\Debug\Tests\Helpers\DerivedTestClass\n{\n  staticVar => \"FooBar\" string[6]\n  publicVar => 10 int\n  protectedVar => false bool\n  privateVar => 20 float\n}", VarDump::toString($derivedTestClass));
+    }
+
+    /**
+     * Test write method for derived object.
+     */
+    public function testWriteDerivedObject()
+    {
+        $derivedTestClass = new DerivedTestClass(10, false, 20.0, 'FooBar');
+
+        ob_start();
+        VarDump::write($derivedTestClass);
+        $value = ob_get_contents();
+        ob_end_clean();
+
+        self::assertSame("MichaelHall\Debug\Tests\Helpers\DerivedTestClass\n{\n  staticVar => \"FooBar\" string[6]\n  publicVar => 10 int\n  protectedVar => false bool\n  privateVar => 20 float\n}", $value);
     }
 }
