@@ -90,7 +90,9 @@ class VarDump
     {
         // fixme: infinite recursion.
         $indentString = str_repeat('  ', $indent);
-        $result = get_class($var) . "\n" . $indentString . "{\n";
+        $stringLabel = self::getStringLabel($var);
+
+        $result = ($stringLabel !== null ? '"' . $stringLabel . '" ' : '') . get_class($var) . "\n" . $indentString . "{\n";
 
         $reflectionClass = new \ReflectionClass($var);
         foreach (self::getReflectionClassProperties($reflectionClass) as $property) {
@@ -147,5 +149,21 @@ class VarDump
         } while ($reflectionClass !== false);
 
         return $properties;
+    }
+
+    /**
+     * Returns a string label for an object or null if no string label could be created.
+     *
+     * @param mixed $var The object.
+     *
+     * @return null|string The string label for an object or null if no string label could be created.
+     */
+    private static function getStringLabel($var): ?string
+    {
+        if (method_exists($var, '__toString')) {
+            return $var->__toString();
+        }
+
+        return null;
     }
 }

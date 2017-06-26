@@ -7,6 +7,7 @@ namespace MichaelHall\Debug\Tests;
 use MichaelHall\Debug\Tests\Helpers\CombinedTestClass;
 use MichaelHall\Debug\Tests\Helpers\DerivedTestClass;
 use MichaelHall\Debug\Tests\Helpers\SimpleTestClass;
+use MichaelHall\Debug\Tests\Helpers\StringableTestClass;
 use MichaelHall\Debug\VarDump;
 use PHPUnit\Framework\TestCase;
 
@@ -264,5 +265,30 @@ class VarDumpTest extends TestCase
         ob_end_clean();
 
         self::assertSame("MichaelHall\Debug\Tests\Helpers\DerivedTestClass\n{\n  staticVar => \"FooBar\" string[6]\n  publicVar => 10 int\n  protectedVar => false bool\n  privateVar => 20 float\n}", $value);
+    }
+
+    /**
+     * Test toString method for a stringable object.
+     */
+    public function testStringableObjectToString()
+    {
+        $stringableTestClass = new StringableTestClass();
+
+        self::assertSame("\"This is a StringableTestClass\" MichaelHall\Debug\Tests\Helpers\StringableTestClass\n{\n}", VarDump::toString($stringableTestClass));
+    }
+
+    /**
+     * Test write method for a stringable object.
+     */
+    public function writeStringableObject()
+    {
+        $stringableTestClass = new StringableTestClass();
+
+        ob_start();
+        VarDump::write($stringableTestClass);
+        $value = ob_get_contents();
+        ob_end_clean();
+
+        self::assertSame("\"This is a StringableTestClass\" MichaelHall\Debug\Tests\Helpers\StringableTestClass\n{\n}", $value);
     }
 }
