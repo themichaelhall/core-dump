@@ -10,6 +10,16 @@ namespace MichaelHall\Debug\Tests\Helpers;
 class StringableTestClass
 {
     /**
+     * StringableTestClass constructor.
+     *
+     * @param \DateTimeInterface $dateTime The date time.
+     */
+    public function __construct(\DateTimeInterface $dateTime)
+    {
+        $this->dateTime = $dateTime;
+    }
+
+    /**
      * Returns this as a string.
      *
      * @return string This as a string.
@@ -18,4 +28,9 @@ class StringableTestClass
     {
         return 'This is a StringableTestClass';
     }
+
+    /**
+     * @var \DateTimeInterface My date time.
+     */
+    private $dateTime;
 }

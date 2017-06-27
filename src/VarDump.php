@@ -164,6 +164,11 @@ class VarDump
             return $var->__toString();
         }
 
+        if (is_a($var, \DateTimeInterface::class)) {
+            /** @var $var \DateTimeInterface */
+            return $var->format('Y-m-d H:i:s.u T');
+        }
+
         return null;
     }
 }

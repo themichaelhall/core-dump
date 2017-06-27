@@ -272,23 +272,23 @@ class VarDumpTest extends TestCase
      */
     public function testStringableObjectToString()
     {
-        $stringableTestClass = new StringableTestClass();
+        $stringableTestClass = new StringableTestClass(new \DateTimeImmutable('2010-11-12 13:14:15.161718', new \DateTimeZone('Europe/Stockholm')));
 
-        self::assertSame("\"This is a StringableTestClass\" MichaelHall\Debug\Tests\Helpers\StringableTestClass\n{\n}", VarDump::toString($stringableTestClass));
+        self::assertSame("\"This is a StringableTestClass\" MichaelHall\Debug\Tests\Helpers\StringableTestClass\n{\n  dateTime => \"2010-11-12 13:14:15.161718 CET\" DateTimeImmutable\n  {\n  }\n}", VarDump::toString($stringableTestClass));
     }
 
     /**
      * Test write method for a stringable object.
      */
-    public function writeStringableObject()
+    public function testWriteStringableObject()
     {
-        $stringableTestClass = new StringableTestClass();
+        $stringableTestClass = new StringableTestClass(new \DateTimeImmutable('2010-11-12 13:14:15.161718', new \DateTimeZone('Europe/Stockholm')));
 
         ob_start();
         VarDump::write($stringableTestClass);
         $value = ob_get_contents();
         ob_end_clean();
 
-        self::assertSame("\"This is a StringableTestClass\" MichaelHall\Debug\Tests\Helpers\StringableTestClass\n{\n}", $value);
+        self::assertSame("\"This is a StringableTestClass\" MichaelHall\Debug\Tests\Helpers\StringableTestClass\n{\n  dateTime => \"2010-11-12 13:14:15.161718 CET\" DateTimeImmutable\n  {\n  }\n}", $value);
     }
 }
