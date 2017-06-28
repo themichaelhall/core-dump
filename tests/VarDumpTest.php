@@ -272,9 +272,9 @@ class VarDumpTest extends TestCase
      */
     public function testStringableObjectToString()
     {
-        $stringableTestClass = new StringableTestClass(new \DateTimeImmutable('2010-11-12 13:14:15.161718', new \DateTimeZone('Europe/Stockholm')));
+        $stringableTestClass = new StringableTestClass(new \DateTimeImmutable('2010-11-12 13:14:15.161718', new \DateTimeZone('Europe/Stockholm')), new \DateInterval('P1Y2M3DT4H5M6S'));
 
-        self::assertSame("\"This is a StringableTestClass\" MichaelHall\Debug\Tests\Helpers\StringableTestClass\n{\n  dateTime => \"2010-11-12 13:14:15.161718 CET\" DateTimeImmutable\n  {\n  }\n}", VarDump::toString($stringableTestClass));
+        self::assertSame("\"This is a StringableTestClass\" MichaelHall\Debug\Tests\Helpers\StringableTestClass\n{\n  dateTime => \"2010-11-12 13:14:15.161718 CET\" DateTimeImmutable\n  {\n  }\n  dateInterval => \"+1y 2m 3d 4h 5m 6s\" DateInterval\n  {\n  }\n}", VarDump::toString($stringableTestClass));
     }
 
     /**
@@ -282,13 +282,13 @@ class VarDumpTest extends TestCase
      */
     public function testWriteStringableObject()
     {
-        $stringableTestClass = new StringableTestClass(new \DateTimeImmutable('2010-11-12 13:14:15.161718', new \DateTimeZone('Europe/Stockholm')));
+        $stringableTestClass = new StringableTestClass(new \DateTimeImmutable('2010-11-12 13:14:15.161718', new \DateTimeZone('Europe/Stockholm')), new \DateInterval('P1Y2M3DT4H5M6S'));
 
         ob_start();
         VarDump::write($stringableTestClass);
         $value = ob_get_contents();
         ob_end_clean();
 
-        self::assertSame("\"This is a StringableTestClass\" MichaelHall\Debug\Tests\Helpers\StringableTestClass\n{\n  dateTime => \"2010-11-12 13:14:15.161718 CET\" DateTimeImmutable\n  {\n  }\n}", $value);
+        self::assertSame("\"This is a StringableTestClass\" MichaelHall\Debug\Tests\Helpers\StringableTestClass\n{\n  dateTime => \"2010-11-12 13:14:15.161718 CET\" DateTimeImmutable\n  {\n  }\n  dateInterval => \"+1y 2m 3d 4h 5m 6s\" DateInterval\n  {\n  }\n}", $value);
     }
 }

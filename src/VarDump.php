@@ -164,9 +164,12 @@ class VarDump
             return $var->__toString();
         }
 
-        if (is_a($var, \DateTimeInterface::class)) {
-            /** @var $var \DateTimeInterface */
+        if ($var instanceof \DateTimeInterface) {
             return $var->format('Y-m-d H:i:s.u T');
+        }
+
+        if ($var instanceof \DateInterval) {
+            return $var->format('%R%yy %mm %dd %hh %im %ss');
         }
 
         return null;
