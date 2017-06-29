@@ -331,7 +331,7 @@ class VarDumpTest extends TestCase
     {
         $resource = tmpfile();
 
-        self::assertSame('"stream #' . (int)$resource . '" (Resource)', VarDump::toString($resource));
+        self::assertSame('"stream #' . (int) $resource . '" (Resource)', VarDump::toString($resource));
     }
 
     /**
@@ -346,6 +346,6 @@ class VarDumpTest extends TestCase
         $value = ob_get_contents();
         ob_end_clean();
 
-        self::assertSame('"stream #' . (int)$resource . '" (Resource)', $value);
+        self::assertSame('"stream #' . (int) $resource . '" (Resource)', $value);
     }
 }

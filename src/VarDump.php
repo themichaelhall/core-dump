@@ -53,7 +53,7 @@ class VarDump
     private static function toStringRecursive($var, int $indent, array $previousObjects): string
     {
         if (is_resource($var)) {
-            return '"' . get_resource_type($var) . ' #' . (int)$var . '" (Resource)';
+            return '"' . get_resource_type($var) . ' #' . (int) $var . '" (Resource)';
         }
 
         if (is_object($var)) {
