@@ -26,7 +26,7 @@ class VarDump
      */
     public static function toString($var): string
     {
-        return self::toStringRecursive($var, 0);
+        return self::toStringRecursive($var, 0, []);
     }
 
     /**
@@ -44,19 +44,20 @@ class VarDump
     /**
      * Dumps a variable as a readable string.
      *
-     * @param mixed $var    The variable.
-     * @param int   $indent The indent.
+     * @param mixed $var             The variable.
+     * @param int   $indent          The indent.
+     * @param array $previousObjects The objects previously handled.
      *
      * @return string The variable as a readable string.
      */
-    private static function toStringRecursive($var, int $indent): string
+    private static function toStringRecursive($var, int $indent, array $previousObjects): string
     {
         if (is_object($var)) {
-            return self::objectToString($var, $indent);
+            return self::objectToString($var, $indent, $previousObjects);
         }
 
         if (is_array($var)) {
-            return self::arrayToString($var, $indent);
+            return self::arrayToString($var, $indent, $previousObjects);
         }
 
         if (is_string($var)) {
@@ -81,23 +82,33 @@ class VarDump
     /**
      * Converts an object to a string.
      *
-     * @param mixed $var    The object.
-     * @param int   $indent The indent.
+     * @param mixed $var             The object.
+     * @param int   $indent          The indent.
+     * @param array $previousObjects The objects previously handled.
      *
      * @return string The object as a string.
      */
-    private static function objectToString($var, int $indent): string
+    private static function objectToString($var, int $indent, array $previousObjects): string
     {
-        // fixme: infinite recursion.
         $indentString = str_repeat('  ', $indent);
         $stringLabel = self::getStringLabel($var);
 
-        $result = ($stringLabel !== null ? '"' . $stringLabel . '" ' : '') . get_class($var) . "\n" . $indentString . "{\n";
+        $result = ($stringLabel !== null ? '"' . $stringLabel . '" ' : '') . get_class($var);
+
+        foreach ($previousObjects as $previousObject) {
+            if ($previousObject === $var) {
+                $result .= ' *RECURSION*';
+
+                return $result;
+            }
+        }
+
+        $result .= "\n" . $indentString . "{\n";
 
         $reflectionClass = new \ReflectionClass($var);
         foreach (self::getReflectionClassProperties($reflectionClass) as $property) {
             $property->setAccessible(true);
-            $result .= $indentString . '  ' . $property->getName() . ' => ' . self::toStringRecursive($property->getValue($var), $indent + 1) . "\n";
+            $result .= $indentString . '  ' . $property->getName() . ' => ' . self::toStringRecursive($property->getValue($var), $indent + 1, array_merge($previousObjects, [$var])) . "\n";
         }
 
         $result .= $indentString . '}';
@@ -108,18 +119,19 @@ class VarDump
     /**
      * Converts an array to a string.
      *
-     * @param array $var    The array.
-     * @param int   $indent The indent.
+     * @param array $var             The array.
+     * @param int   $indent          The indent.
+     * @param array $previousObjects The objects previously handled.
      *
      * @return string The array as a string.
      */
-    private static function arrayToString(array $var, int $indent): string
+    private static function arrayToString(array $var, int $indent, array $previousObjects): string
     {
         $indentString = str_repeat('  ', $indent);
         $result = 'array[' . count($var) . "]\n" . $indentString . "[\n";
 
         foreach ($var as $key => $value) {
-            $result .= $indentString . '  ' . self::toString($key) . ' => ' . self::toStringRecursive($value, $indent + 1) . "\n";
+            $result .= $indentString . '  ' . self::toString($key) . ' => ' . self::toStringRecursive($value, $indent + 1, $previousObjects) . "\n";
         }
 
         $result .= $indentString . ']';

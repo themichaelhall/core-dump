@@ -6,6 +6,7 @@ namespace MichaelHall\Debug\Tests;
 
 use MichaelHall\Debug\Tests\Helpers\CombinedTestClass;
 use MichaelHall\Debug\Tests\Helpers\DerivedTestClass;
+use MichaelHall\Debug\Tests\Helpers\RecursiveTestClass;
 use MichaelHall\Debug\Tests\Helpers\SimpleTestClass;
 use MichaelHall\Debug\Tests\Helpers\StringableTestClass;
 use MichaelHall\Debug\VarDump;
@@ -290,5 +291,36 @@ class VarDumpTest extends TestCase
         ob_end_clean();
 
         self::assertSame("\"This is a StringableTestClass\" MichaelHall\Debug\Tests\Helpers\StringableTestClass\n{\n  dateTime => \"2010-11-12 13:14:15.161718 CET\" DateTimeImmutable\n  {\n  }\n  dateInterval => \"+1y 2m 3d 4h 5m 6s\" DateInterval\n  {\n  }\n}", $value);
+    }
+
+    /**
+     * Test toString method for a recursive object.
+     */
+    public function testRecursiveObjectToString()
+    {
+        $recursiveTestClass1 = new RecursiveTestClass('Test A', 1);
+        $recursiveTestClass2 = new RecursiveTestClass('Test B', 2);
+        $recursiveTestClass1->recursiveTestClass = $recursiveTestClass2;
+        $recursiveTestClass2->recursiveTestClass = $recursiveTestClass1;
+
+        self::assertSame("\"Test A 1\" MichaelHall\Debug\Tests\Helpers\RecursiveTestClass\n{\n  text => \"Test A\" string[6]\n  recursiveTestClass => \"Test B 2\" MichaelHall\Debug\Tests\Helpers\RecursiveTestClass\n  {\n    text => \"Test B\" string[6]\n    recursiveTestClass => \"Test A 1\" MichaelHall\Debug\Tests\Helpers\RecursiveTestClass *RECURSION*\n    number => 2 int\n  }\n  number => 1 int\n}", VarDump::toString($recursiveTestClass1));
+    }
+
+    /**
+     * Test write method for a recursive object.
+     */
+    public function testWriteRecursiveObject()
+    {
+        $recursiveTestClass1 = new RecursiveTestClass('Test A', 1);
+        $recursiveTestClass2 = new RecursiveTestClass('Test B', 2);
+        $recursiveTestClass1->recursiveTestClass = $recursiveTestClass2;
+        $recursiveTestClass2->recursiveTestClass = $recursiveTestClass1;
+
+        ob_start();
+        VarDump::write($recursiveTestClass1);
+        $value = ob_get_contents();
+        ob_end_clean();
+
+        self::assertSame("\"Test A 1\" MichaelHall\Debug\Tests\Helpers\RecursiveTestClass\n{\n  text => \"Test A\" string[6]\n  recursiveTestClass => \"Test B 2\" MichaelHall\Debug\Tests\Helpers\RecursiveTestClass\n  {\n    text => \"Test B\" string[6]\n    recursiveTestClass => \"Test A 1\" MichaelHall\Debug\Tests\Helpers\RecursiveTestClass *RECURSION*\n    number => 2 int\n  }\n  number => 1 int\n}", $value);
     }
 }
