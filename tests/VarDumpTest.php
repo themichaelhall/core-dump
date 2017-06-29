@@ -323,4 +323,29 @@ class VarDumpTest extends TestCase
 
         self::assertSame("\"Test A 1\" MichaelHall\Debug\Tests\Helpers\RecursiveTestClass\n{\n  text => \"Test A\" string[6]\n  recursiveTestClass => \"Test B 2\" MichaelHall\Debug\Tests\Helpers\RecursiveTestClass\n  {\n    text => \"Test B\" string[6]\n    recursiveTestClass => \"Test A 1\" MichaelHall\Debug\Tests\Helpers\RecursiveTestClass *RECURSION*\n    number => 2 int\n  }\n  number => 1 int\n}", $value);
     }
+
+    /**
+     * Test toString method for a resource.
+     */
+    public function testResourceToString()
+    {
+        $resource = tmpfile();
+
+        self::assertSame('"stream #' . (int)$resource . '" (Resource)', VarDump::toString($resource));
+    }
+
+    /**
+     * Test write method for a resource.
+     */
+    public function testWriteResource()
+    {
+        $resource = tmpfile();
+
+        ob_start();
+        VarDump::write($resource);
+        $value = ob_get_contents();
+        ob_end_clean();
+
+        self::assertSame('"stream #' . (int)$resource . '" (Resource)', $value);
+    }
 }
