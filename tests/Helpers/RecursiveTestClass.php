@@ -6,8 +6,6 @@ namespace MichaelHall\Debug\Tests\Helpers;
 
 /**
  * A recursive test class.
- *
- * @package MichaelHall\Debug\Tests\Helpers
  */
 class RecursiveTestClass
 {
